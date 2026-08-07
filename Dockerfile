@@ -1,8 +1,7 @@
 FROM ubuntu:24.04
 
-RUN apt-get update
-
 RUN apt-get update && apt-get install -y \
+    sudo \
     wget \
     curl \
     git \
@@ -12,4 +11,7 @@ RUN apt-get update && apt-get install -y \
     && rm install.sh \
     && rm -rf /var/lib/apt/lists/*
 
-CMD code-server --auth none --bind-addr 0.0.0.0:10000
+EXPOSE 10000
+
+# Trực tiếp chạy code-server bằng cách đọc file config (bản chất giống hệt service)
+CMD ["code-server", "--config", "/root/.config/code-server/config.yaml", "--auth", "none", "--bind-addr", "0.0.0.0:10000"]
