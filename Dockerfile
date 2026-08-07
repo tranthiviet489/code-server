@@ -15,4 +15,4 @@ RUN curl -fsSL https://code-server.dev/install.sh​ | sh
 ENV HOME=/home/user \
     PATH=/home/user/.local/bin:$PATH
 
-CMD code-server --auth none --bind-addr 0.0.0.0:7860
+CMD code-server --auth none --bind-addr 0.0.0.0:10000
