@@ -2,8 +2,6 @@ FROM ubuntu:24.04
 
 RUN apt update
 
-RUN useradd -m -u 1000 user
-
 RUN apt install wget curl sudo git curl -y
 
 RUN git clone https://github.com/dylanaraps/neofetch /opt/neofetch && \
