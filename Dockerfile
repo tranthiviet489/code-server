@@ -4,7 +4,7 @@ RUN apt-get update
 
 RUN apt-get install wget curl sudo git curl -y
 
-RUN git clone https://github.com/dylanaraps/neofetch /opt/neofetch && 
+RUN git clone https://github.com/dylanaraps/neofetch /opt/neofetch 
 
 RUN curl -fsSL https://code-server.dev/install.sh​ | sh
 
