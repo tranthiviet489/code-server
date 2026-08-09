@@ -1,17 +1,17 @@
-FROM ubuntu:24.04
+FROM --platform=linux/amd64 ubuntu:24.04
 
-RUN apt-get update && apt-get install -y \
-    sudo \
-    wget \
-    curl \
-    git \
-    && wget -O install.sh https://code-server.dev/install.sh \
-    && chmod +x install.sh \
-    && ./install.sh \
-    && rm install.sh \
-    && rm -rf /var/lib/apt/lists/*
-
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update -y && apt install --no-install-recommends -y xfce4 xfce4-goodies tigervnc-standalone-server novnc websockify sudo xterm init systemd snapd vim net-tools curl wget git tzdata
+RUN apt update -y && apt install -y dbus-x11 x11-utils x11-xserver-utils x11-apps
+RUN apt install software-properties-common -y
+RUN add-apt-repository ppa:mozillateam/ppa -y
+RUN echo 'Package: *' >> /etc/apt/preferences.d/mozilla-firefox
+RUN echo 'Pin: release o=LP-PPA-mozillateam' >> /etc/apt/preferences.d/mozilla-firefox
+RUN echo 'Pin-Priority: 1001' >> /etc/apt/preferences.d/mozilla-firefox
+RUN echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:jammy";' | tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+RUN apt update -y && apt install -y firefox
+RUN apt update -y && apt install -y xubuntu-icon-theme
+RUN touch /root/.Xauthority
+EXPOSE 5901
 EXPOSE 10000
-
-# Trực tiếp chạy code-server bằng cách đọc file config (bản chất giống hệt service)
-CMD ["code-server", "--config", "/root/.config/code-server/config.yaml", "--auth", "none", "--bind-addr", "0.0.0.0:10000"]
+CMD bash -c "vncserver -localhost no -SecurityTypes None -geometry 1024x768 --I-KNOW-THIS-IS-INSECURE && openssl req -new -subj "/C=JP" -x509 -days 365 -nodes -out self.pem -keyout self.pem && websockify -D --web=/usr/share/novnc/ --cert=self.pem 10000 localhost:5901 && tail -f /dev/null"
