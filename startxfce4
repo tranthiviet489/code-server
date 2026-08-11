@@ -23,7 +23,7 @@ sudo dpkg -i cloudflared-linux-amd64.deb
 sudo apt --fix-broken install -y
 
 # 5. Cài đặt XFCE4, noVNC, Websockify, TightVNCServer, Firefox-ESR từ PPA và dbus-x11
-sudo apt install xfce4 xfce4-goodies novnc websockify tigervncserver firefox-esr dbus-x11 -y
+sudo apt install xfce4 xfce4-goodies novnc websockify tigervnc-standalone-server firefox-esr dbus-x11 -y
 
 # 6. Khởi chạy VNC Server (Cổng :1 tương đương 5901)
 vncserver -SecurityTypes None -xstartup /usr/bin/startxfce4 :1
