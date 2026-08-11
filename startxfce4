@@ -1,0 +1,39 @@
+cat << 'EOF' > setup_vnc_tunnel.sh
+#!/bin/bash
+
+sudo apt update
+
+# 1. Thêm kho PPA Firefox ESR chính thức của Mozilla
+sudo apt-get install software-properties-common -y
+sudo add-apt-repository ppa:mozillateam/ppa -y
+
+# 2. Cấu hình APT Pinning để ưu tiên cài Firefox từ PPA
+echo '
+Package: firefox*
+Pin: release o=LP-PPA-mozillateam
+Pin-Priority: 1001
+' | sudo tee /etc/apt/preferences.d/mozilla-firefox
+
+# 3. Cập nhật hệ thống
+sudo apt update -y
+
+# 4. Tải và cài đặt Cloudflared bằng đường dẫn chính xác
+wget https://github.com/cloudflare/cloudflared/releases/download/2026.7.3/cloudflared-linux-amd64.deb
+sudo dpkg -i cloudflared-linux-amd64.deb
+sudo apt --fix-broken install -y
+
+# 5. Cài đặt XFCE4, noVNC, Websockify, TightVNCServer, Firefox-ESR từ PPA và dbus-x11
+sudo apt install xfce4 xfce4-goodies novnc websockify tightvncserver firefox-esr dbus-x11 -y
+
+# 6. Khởi chạy VNC Server (Cổng :1 tương đương 5901)
+vncserver -SecurityTypes None -xstartup /usr/bin/startxfce4 :1
+
+# 7. Chạy Websockify ở chế độ ngầm theo cấu trúc của bạn
+websockify --web=/usr/share/novnc 6080 localhost:5901 &
+
+# Tạm dừng 2 giây để websockify khởi động ổn định trước khi mở tunnel
+sleep 2
+
+# 8. Chạy Cloudflare Tunnel tạo link công khai tự động
+cloudflared tunnel --url http://localhost:6080
+EOF
