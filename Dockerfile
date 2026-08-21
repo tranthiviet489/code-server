@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu
 
 RUN apt-get update && \
 apt-get install -y shellinabox && \
@@ -9,5 +9,4 @@ RUN echo 'root:root' | chpasswd
 
 EXPOSE 4200
 
-# Start shellinabox
-CMD ["/usr/bin/shellinaboxd", "-t", "-s", "/:LOGIN"]
+CMD ["/usr/bin/shellinaboxd", "-t", "-s", "/:root:root:/:bash"]
