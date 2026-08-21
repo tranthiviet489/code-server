@@ -1,16 +1,18 @@
-FROM ubuntu
+FROM ubuntu:20.04
 
 # Tránh các câu hỏi tương tác cấu hình hệ thống
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Chỉ cài đặt ttyd, tmux và các công cụ tải file cơ bản
+# 1. Cài đặt các công cụ tải file cơ bản cần thiết cho script
 RUN apt-get update && \
-    apt-get install -y ttyd tmux curl wget & \
+    apt-get install -y nano openssh-server curl wget sudo git & \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Mở cổng 7681 cho ttyd
-EXPOSE 7681
+# 2. Tải và cài đặt code-server bằng câu lệnh chính thức của bạn
+RUN curl -fsSL https://code-server.dev/install.sh | sh
 
-# Chạy trực tiếp ttyd kết hợp tmux ở cổng 7681 mà không cần script mồi
-CMD ["ttyd", "-p", "7681", "-t", "enable_touch=true", "tmux", "new-session", "-A", "-s", "main"]
+# Mở cổng 8080 (Cổng mặc định phổ biến trên Render)
+EXPOSE 8080
+
+CMD ["code-server", "--bind-addr", "0.0.0.0:8080", "--auth", "none"]
