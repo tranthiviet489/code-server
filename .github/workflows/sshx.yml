@@ -1,25 +1,47 @@
 name: Chay SSHX tren Ubuntu
 
 on:
-  # Cho phép bạn bấm nút "Run workflow" thủ công trên giao diện GitHub
   workflow_dispatch:
 
 jobs:
   sshx-job:
     runs-on: ubuntu-latest
-    # Cấu hình thời gian chạy tối đa (ví dụ: 60 phút) để tránh bị rớt kết nối sớm
-    timeout-minutes: 60
+    timeout-minutes: 360 
 
     steps:
       - name: Cap nhat he thong va Cai dat cong cu
         run: |
           sudo apt-get update
-          sudo apt-get install -y sudo curl wget nano
+          sudo apt-get install -y sudo curl wget nano python3
 
       - name: Tai va Cai dat sshx
         run: |
-          curl -sSf https://sshx.io/get | sh
+          curl -sSf https://sshx.io | sh
 
-      - name: Khoi chay sshx
+      - name: Khoi chay sshx va Script Python
         run: |
-          sshx
+          # 1. Chạy sshx ở chế độ nền
+          sshx &
+          
+          # Đợi 5 giây để sshx kịp in link truy cập ra màn hình log
+          sleep 5
+          
+          # 2. Tạo và chạy script Python lặp lại trong 6 tiếng (21600 giây)
+          python3 -c "
+          import time
+          import sys
+
+          start_time = time.time()
+          duration = 6 * 60 * 60  # 6 tiếng đổi ra giây
+          count = 1
+
+          print('=== BẮT ĐẦU VÒNG LẶP PYTHON (6 TIẾNG) ===', flush=True)
+
+          while time.time() - start_time < duration:
+              remaining = int(duration - (time.time() - start_time))
+              print(f'[Lần {count}] Script đang chạy tốt. Còn lại: {remaining} giây...', flush=True)
+              count += 1
+              time.sleep(10)  # Lặp lại sau mỗi 10 giây
+
+          print('=== KẾT THÚC 6 TIẾNG ===', flush=True)
+          "
