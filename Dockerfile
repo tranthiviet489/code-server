@@ -13,4 +13,4 @@ RUN apt-get update && \
 EXPOSE 7681
 
 # Chạy trực tiếp ttyd kết hợp tmux ở cổng 7681 mà không cần script mồi
-CMD ["ttyd", "-p", "7681", "tmux", "new-session", "-A", "-s", "main"]
+CMD ["ttyd", "-p", "7681", "-t", "enable_touch=true", "tmux", "new-session", "-A", "-s", "main"]
