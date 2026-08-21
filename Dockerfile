@@ -1,5 +1,13 @@
-FROM ubuntu:latest
-RUN apt update && apt install -y curl nodejs npm openssh-server sudo
-RUN npm install -g wetty
-EXPOSE 3000
-CMD ["wetty", "--host", "0.0.0.0", "-p", "3000"]
+FROM ubuntu:20.04
+
+RUN apt-get update && \
+apt-get install -y shellinabox && \
+apt-get install -y systemd && \
+apt-get clean && \
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN echo 'root:root' | chpasswd
+
+EXPOSE 4200
+
+# Start shellinabox
+CMD ["/usr/bin/shellinaboxd", "-t", "-s", "/:LOGIN"]
