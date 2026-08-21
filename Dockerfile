@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu
 
 # Tránh các câu hỏi tương tác cấu hình hệ thống
 ENV DEBIAN_FRONTEND=noninteractive
