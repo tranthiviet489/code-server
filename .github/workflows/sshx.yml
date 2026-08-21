@@ -1,0 +1,25 @@
+name: Chay SSHX tren Ubuntu
+
+on:
+  # Cho phép bạn bấm nút "Run workflow" thủ công trên giao diện GitHub
+  workflow_dispatch:
+
+jobs:
+  sshx-job:
+    runs-on: ubuntu-latest
+    # Cấu hình thời gian chạy tối đa (ví dụ: 60 phút) để tránh bị rớt kết nối sớm
+    timeout-minutes: 60
+
+    steps:
+      - name: Cap nhat he thong va Cai dat cong cu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sudo curl wget nano
+
+      - name: Tai va Cai dat sshx
+        run: |
+          curl -sSf https://sshx.io/get | sh
+
+      - name: Khoi chay sshx
+        run: |
+          sshx
